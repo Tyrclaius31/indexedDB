@@ -227,5 +227,36 @@
                 alert(`Error al eliminar el producto con el id: ${id_producto}`);
             }
         }
+
+        // Función para obtener los elementos de un objeto ordenados según una llave y una dirección especifica
+        window.obtenerElementosOrdenados = function(objeto, llave, direccion){
+            // Se inicia una transacción de lectura
+            const transaccion = db.transaction([objeto], 'readonly');
+            const almacen = transaccion.objectStore(objeto);
+            
+            // Se establece la dirección del ordenamiento
+            const cursorDirection = direccion === 'asc' ? 'next' : 'prev';
+        
+            // Se abre un cursor para recorrer los elementos ordenados
+            const request = almacen.openCursor(null, cursorDirection);
+        
+            // Array en el que se almacenarán los elementos ordenados
+            const elementosOrdenados = [];
+        
+            // Rutina del éxito de la consulta
+            request.onsuccess = function(event){
+                const cursor = event.target.result;
+                if (cursor) {
+                    // Se agrega el elemento al array
+                    elementosOrdenados.push(cursor.value);
+                    // Se avanza al siguiente elemento
+                    cursor.continue();
+                } else {
+                    // Cuando se han recorrido todos los elementos, se imprimirán por consola
+                    console.log(`Elementos de ${objeto} ordenados por ${llave} en dirección ${direccion}:`);
+                    console.table(elementosOrdenados);
+                }    
+            }   
+        }
     }
 })();
