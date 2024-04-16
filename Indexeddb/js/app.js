@@ -117,7 +117,7 @@
             request.onsuccess = function(event){
                 const producto = request.result;
                 if(producto) {
-                    console.log(`Se encontro el producto: ${producto.descripcion}`);
+                    console.log(`Se encontro el producto: ${producto.descripcion} con un precio de: ${producto.precio}`);
                     if(callback) callback(producto);
                 } else {
                     console.log('No se encontró el producto con el id:', id_producto);
@@ -184,8 +184,6 @@
             const request = almacen.get(id_producto);
             request.onsuccess = function(event){
                 const producto = request.result;
-                producto.descripcion = 'Producto 1';
-                producto.precio = 100;
                 const requestUpdate = almacen.put(update);
                 requestUpdate.onsuccess = function(event){
                     console.log(`Producto actualizado correctamente con el id: ${id_producto}`);
