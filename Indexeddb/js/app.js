@@ -157,7 +157,6 @@
             }
         }
 
-        // FIXME: Arreglando de actualizar
         // función para actualizar un cliente y producto con un id específico
         window.actualizarCliente = function(id_cliente, update){
             // Se inicia una transacción de lectura y escritura
@@ -166,9 +165,6 @@
             const request = almacen.get(id_cliente);
             request.onsuccess = function(event){
                 const cliente = request.result;
-                cliente.nombre = 'Juan';
-                cliente.direccion = 'Calle 123';
-                cliente.telefono = '123456';
                 const requestUpdate = almacen.put(update);
                 requestUpdate.onsuccess = function(event){
                     console.log(`Cliente actualizado correctamente con el id: ${id_cliente}`);
@@ -179,28 +175,59 @@
                     alert(`Error al actualizar el cliente con el id: ${id_cliente}`);
                 }
             }
-            request.onerror = function(event){
-                console.error(`Error al obtener el cliente con el id: ${id_cliente}`);
-                alert(`Error al obtener el cliente con el id: ${id_cliente}`);
+        }
+
+        window.actualizarProducto = function(id_producto, update){
+            // Se inicia una transacción de lectura y escritura
+            const transaccion = db.transaction(['productos'], 'readwrite');
+            const almacen = transaccion.objectStore('productos');
+            const request = almacen.get(id_producto);
+            request.onsuccess = function(event){
+                const producto = request.result;
+                producto.descripcion = 'Producto 1';
+                producto.precio = 100;
+                const requestUpdate = almacen.put(update);
+                requestUpdate.onsuccess = function(event){
+                    console.log(`Producto actualizado correctamente con el id: ${id_producto}`);
+                    alert(`Producto actualizado correctamente con el id: ${id_producto}`);
+                }
+                requestUpdate.onerror = function(event){
+                    console.error(`Error al actualizar el producto con el id: ${id_producto}`);
+                    alert(`Error al actualizar el producto con el id: ${id_producto}`);
+                }
             }
         }
 
-        // try {
-        //     // Usando objetos literales se agregan datos a las tablas
-        //     // Agregar cliente
-        //     agregarCliente({ nombre: 'Pedro', direccion: 'Calle 321', telefono: '098745' });
-        //     agregarCliente({ nombre: 'Juan', direccion: 'Calle 123', telefono: '123456' });
+        // función para eliminar un cliente y producto con un id específico
+        window.eliminarCliente = function(id_cliente){
+            // Se inicia una transacción de lectura y escritura
+            const transaccion = db.transaction(['clientes'], 'readwrite');
+            const almacen = transaccion.objectStore('clientes');
+            const request = almacen.delete(id_cliente);
+            request.onsuccess = function(event){
+                console.log(`Cliente eliminado correctamente con el id: ${id_cliente}`);
+                alert(`Cliente eliminado correctamente con el id: ${id_cliente}`);
+            }
+            request.onerror = function(event){
+                console.error(`Error al eliminar el cliente con el id: ${id_cliente}`);
+                alert(`Error al eliminar el cliente con el id: ${id_cliente}`);
+            }
+        }
 
-        //     // Agregar producto
-        //     agregarProducto({ descripcion: 'Producto 1', precio: 100 });
-        //     agregarProducto({ descripcion: 'Producto 2', precio: 200 });
-            
-        //     // Agregar venta
-        //     agregarVenta({ id_cliente: 1, id_producto: 1, fecha: new Date(), cantidad: 2, total: 200 });
-        //     agregarVenta({ id_cliente: 2, id_producto: 2, fecha: new Date(), cantidad: 3, total: 600 });
-            
-        // } catch (error) {
-        //     console.error(`Error al agregar un cliente, producto o venta:`, error);
-        // }
-}
+        // Función para eliminar un producto con un id específico
+        window.eliminarProducto = function(id_producto){
+            // Se inicia una transacción de lectura y escritura
+            const transaccion = db.transaction(['productos'], 'readwrite');
+            const almacen = transaccion.objectStore('productos');
+            const request = almacen.delete(id_producto);
+            request.onsuccess = function(event){
+                console.log(`Producto eliminado correctamente con el id: ${id_producto}`);
+                alert(`Producto eliminado correctamente con el id: ${id_producto}`);
+            }
+            request.onerror = function(event){
+                console.error(`Error al eliminar el producto con el id: ${id_producto}`);
+                alert(`Error al eliminar el producto con el id: ${id_producto}`);
+            }
+        }
+    }
 })();
